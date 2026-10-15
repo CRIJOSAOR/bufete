@@ -16,14 +16,14 @@ return [
         ['100%', 'Confidencialidad'],
     ],
 
-    'areas' => [
-        ['⚖️', 'Derecho Civil', 'Contratos, sucesiones, propiedad y reclamaciones entre particulares.'],
-        ['👨‍👩‍👧', 'Derecho de Familia', 'Divorcios, pensión alimenticia, custodia y filiación.'],
-        ['🏢', 'Derecho Mercantil', 'Constitución de sociedades, asesoría empresarial y cobros.'],
-        ['🛡️', 'Derecho Penal', 'Defensa en todas las etapas del proceso penal.'],
-        ['👷', 'Derecho Laboral', 'Despidos, prestaciones y contratos de trabajo.'],
-        ['🏠', 'Bienes y Registro', 'Escrituras, títulos de propiedad y trámites registrales.'],
-    ],
+ 'areas' => [
+    ['scale',           'Derecho Civil',      'Contratos, sucesiones, propiedad y reclamaciones entre particulares.'],
+    ['user-group',      'Derecho de Familia', 'Divorcios, pensión alimenticia, custodia y filiación.'],
+    ['building-office', 'Derecho Mercantil',  'Constitución de sociedades, asesoría empresarial y cobros.'],
+    ['shield-check',    'Derecho Penal',      'Defensa en todas las etapas del proceso penal.'],
+    ['briefcase',       'Derecho Laboral',    'Despidos, prestaciones y contratos de trabajo.'],
+    ['home-modern',     'Bienes y Registro',  'Escrituras, títulos de propiedad y trámites registrales.'],
+],
 
     'pasos' => [
         ['1', 'Nos cuenta su caso', 'Por teléfono, WhatsApp o en nuestra oficina.'],
@@ -32,11 +32,11 @@ return [
         ['4', 'Lo acompañamos hasta el final', 'Le informamos de cada avance de su proceso.'],
     ],
 
-    'equipo' => [
-        ['AR', 'Lic. Nombre Apellido', 'Socio fundador · Derecho Civil'],
-        ['MP', 'Lic. Nombre Apellido', 'Socia · Derecho de Familia'],
-        ['JL', 'Lic. Nombre Apellido', 'Abogado · Derecho Mercantil'],
-    ],
+  'equipo' => [
+    ['AR', 'Lic. Nombre Apellido', 'Socio fundador · Derecho Civil', 'socio1.jpg'],
+    ['MP', 'Lic. Nombre Apellido', 'Socia · Derecho de Familia', 'socia2.jpg'],
+    ['JL', 'Lic. Nombre Apellido', 'Abogado · Derecho Mercantil', 'abogado3.jpg'],
+],
 
     'preguntas' => [
         ['¿La primera consulta tiene costo?', 'Texto de ejemplo: indique aquí la política de primera consulta del bufete.'],

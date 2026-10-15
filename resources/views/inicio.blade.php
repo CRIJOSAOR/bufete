@@ -5,8 +5,10 @@
 @section('content')
 
 {{-- Portada --}}
-<section class="bg-navy text-white">
-    <div class="max-w-6xl mx-auto px-6 py-24 md:py-32">
+<section class="relative bg-navy text-white bg-cover bg-center"
+         style="background-image: url('{{ asset('img/portada.jpg') }}')">
+    <div class="absolute inset-0 bg-navy/80"></div>
+    <div class="relative max-w-6xl mx-auto px-6 py-24 md:py-32">
         <p class="text-gold font-medium tracking-widest text-sm uppercase mb-4">Asesoría jurídica integral</p>
         <h1 class="font-serif text-4xl md:text-6xl font-bold leading-tight max-w-3xl">
             {{ config('bufete.eslogan') }}
@@ -26,12 +28,16 @@
     <div class="max-w-6xl mx-auto px-6">
         <h2 class="font-serif text-3xl md:text-4xl font-bold text-navy text-center">Áreas de práctica</h2>
         <p class="text-center mt-3 text-slate-500">Asesoría especializada para cada necesidad</p>
+
         <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             @foreach (config('bufete.areas') as $area)
-                <div class="bg-white p-6 rounded-lg border border-slate-200 hover:shadow-lg hover:border-gold transition">
-                    <div class="text-3xl">{{ $area[0] }}</div>
-                    <h3 class="mt-4 font-serif text-xl font-semibold text-navy">{{ $area[1] }}</h3>
-                    <p class="mt-2 text-sm text-slate-600">{{ $area[2] }}</p>
+                <div class="bg-white p-8 rounded-lg border border-slate-200 hover:border-gold hover:shadow-lg transition">
+                    <div class="w-14 h-14 rounded-full bg-navy text-gold flex items-center justify-center">
+                        @svg('heroicon-o-' . $area[0], 'w-7 h-7')
+                    </div>
+                    <h3 class="mt-5 font-serif text-xl font-semibold text-navy">{{ $area[1] }}</h3>
+                    <div class="mt-3 w-10 h-0.5 bg-gold"></div>
+                    <p class="mt-3 text-sm text-slate-600">{{ $area[2] }}</p>
                 </div>
             @endforeach
         </div>
@@ -58,6 +64,15 @@
 <section id="nosotros" class="py-20 bg-slate-50">
     <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
         <div>
+            @if (file_exists(public_path('img/nosotros.jpg')))
+                <img src="{{ asset('img/nosotros.jpg') }}" alt="Nuestro bufete"
+                     class="w-full h-96 object-cover rounded-lg shadow-lg">
+            @else
+                <div class="w-full h-96 rounded-lg bg-navy"></div>
+            @endif
+        </div>
+
+        <div>
             <h2 class="font-serif text-3xl md:text-4xl font-bold text-navy">Sobre nosotros</h2>
             <p class="mt-6 leading-relaxed">
                 Somos un bufete comprometido con la defensa de los intereses de nuestros clientes.
@@ -68,14 +83,15 @@
                 Cada caso es único, por eso le dedicamos el tiempo necesario para entender su
                 situación y diseñar la mejor estrategia.
             </p>
-        </div>
-        <div class="grid grid-cols-3 gap-4 text-center">
-            @foreach (config('bufete.cifras') as $cifra)
-                <div class="bg-navy text-white rounded-lg p-6">
-                    <p class="font-serif text-3xl font-bold text-gold">{{ $cifra[0] }}</p>
-                    <p class="text-xs mt-1">{{ $cifra[1] }}</p>
-                </div>
-            @endforeach
+
+            <div class="mt-8 grid grid-cols-3 gap-4 text-center">
+                @foreach (config('bufete.cifras') as $cifra)
+                    <div class="bg-navy text-white rounded-lg p-4">
+                        <p class="font-serif text-2xl font-bold text-gold">{{ $cifra[0] }}</p>
+                        <p class="text-xs mt-1">{{ $cifra[1] }}</p>
+                    </div>
+                @endforeach
+            </div>
         </div>
     </div>
 </section>
@@ -86,8 +102,17 @@
         <h2 class="font-serif text-3xl md:text-4xl font-bold text-navy text-center">Nuestro equipo</h2>
         <div class="mt-12 grid gap-8 sm:grid-cols-3">
             @foreach (config('bufete.equipo') as $persona)
+                @php
+                    $foto = $persona[3] ?? null;
+                    $existe = $foto && file_exists(public_path('img/equipo/' . $foto));
+                @endphp
                 <div class="text-center">
-                    <div class="mx-auto w-28 h-28 rounded-full bg-navy text-gold font-serif text-3xl font-bold flex items-center justify-center">{{ $persona[0] }}</div>
+                    @if ($existe)
+                        <img src="{{ asset('img/equipo/' . $foto) }}" alt="{{ $persona[1] }}"
+                             class="mx-auto w-40 h-40 rounded-full object-cover border-4 border-gold/30">
+                    @else
+                        <div class="mx-auto w-40 h-40 rounded-full bg-navy text-gold font-serif text-4xl font-bold flex items-center justify-center">{{ $persona[0] }}</div>
+                    @endif
                     <h3 class="mt-4 font-serif text-lg font-semibold text-navy">{{ $persona[1] }}</h3>
                     <p class="text-sm text-slate-500">{{ $persona[2] }}</p>
                 </div>
@@ -102,7 +127,7 @@
         <h2 class="font-serif text-3xl md:text-4xl font-bold text-navy text-center">Preguntas frecuentes</h2>
         <div class="mt-10 space-y-3">
             @foreach (config('bufete.preguntas') as $p)
-                <details class="bg-white border border-slate-200 rounded-lg p-5 group">
+                <details class="bg-white border border-slate-200 rounded-lg p-5">
                     <summary class="font-medium text-navy cursor-pointer">{{ $p[0] }}</summary>
                     <p class="mt-3 text-sm text-slate-600">{{ $p[1] }}</p>
                 </details>
@@ -118,26 +143,24 @@
         <p class="mt-4 text-slate-600">Cuéntenos su caso y le responderemos a la brevedad.</p>
 
         <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 text-sm">
-            <div class="p-6 border border-slate-200 rounded-lg">
-                <p class="text-2xl">📍</p>
-                <p class="mt-2 font-semibold text-navy">Dirección</p>
-                <p class="mt-1">{{ config('bufete.direccion') }}</p>
-            </div>
-            <div class="p-6 border border-slate-200 rounded-lg">
-                <p class="text-2xl">📞</p>
-                <p class="mt-2 font-semibold text-navy">Teléfono</p>
-                <p class="mt-1">{{ config('bufete.telefono') }}</p>
-            </div>
-            <div class="p-6 border border-slate-200 rounded-lg">
-                <p class="text-2xl">✉️</p>
-                <p class="mt-2 font-semibold text-navy">Correo</p>
-                <p class="mt-1">{{ config('bufete.correo') }}</p>
-            </div>
-            <div class="p-6 border border-slate-200 rounded-lg">
-                <p class="text-2xl">🕘</p>
-                <p class="mt-2 font-semibold text-navy">Horario</p>
-                <p class="mt-1">{{ config('bufete.horario') }}</p>
-            </div>
+            @php
+                $contacto = [
+                    ['map-pin',  'Dirección', config('bufete.direccion')],
+                    ['phone',    'Teléfono',  config('bufete.telefono')],
+                    ['envelope', 'Correo',    config('bufete.correo')],
+                    ['clock',    'Horario',   config('bufete.horario')],
+                ];
+            @endphp
+
+            @foreach ($contacto as $dato)
+                <div class="p-6 border border-slate-200 rounded-lg">
+                    <div class="mx-auto w-12 h-12 rounded-full bg-navy text-gold flex items-center justify-center">
+                        @svg('heroicon-o-' . $dato[0], 'w-6 h-6')
+                    </div>
+                    <p class="mt-3 text-xs font-semibold uppercase tracking-widest text-gold">{{ $dato[1] }}</p>
+                    <p class="mt-1">{{ $dato[2] }}</p>
+                </div>
+            @endforeach
         </div>
 
         <a href="https://wa.me/{{ config('bufete.whatsapp') }}?text={{ urlencode('Hola, quisiera una consulta.') }}"
