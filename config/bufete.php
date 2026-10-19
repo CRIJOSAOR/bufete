@@ -6,7 +6,7 @@ return [
     'ciudad'    => 'Tegucigalpa, Honduras',
     'direccion' => 'Colonia Palmira, Edificio Ejemplo, 3er piso',
     'telefono'  => '+504 2200-0000',
-    'whatsapp'  => '50499999999', // solo números, con código de país
+    'whatsapp'  => '50433290262', // solo números, con código de país
     'correo'    => 'contacto@bufetelegal.com',
     'horario'   => 'Lunes a viernes, 8:00 a.m. a 5:00 p.m.',
 
