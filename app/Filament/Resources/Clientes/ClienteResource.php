@@ -43,6 +43,11 @@ class ClienteResource extends Resource
         return ClientesTable::configure($table);
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->visiblesPara(auth()->user());
+    }
+
     public static function getRelations(): array
     {
         return [
@@ -62,6 +67,7 @@ class ClienteResource extends Resource
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
         return parent::getRecordRouteBindingEloquentQuery()
+            ->visiblesPara(auth()->user())
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

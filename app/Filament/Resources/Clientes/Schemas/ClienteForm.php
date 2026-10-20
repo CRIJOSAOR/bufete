@@ -55,7 +55,8 @@ class ClienteForm
                 Textarea::make('notas_privadas')
                     ->label('Notas privadas (confidencial)')
                     ->rows(3)
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->visible(fn (): bool => auth()->user()->puedeVerConfidencial()),
             ]);
     }
 }

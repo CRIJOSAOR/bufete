@@ -29,6 +29,13 @@ class User extends Authenticatable implements FilamentUser
         return (bool) $this->activo;
     }
 
+    // Por ahora "confidencial" lo ven super_admin y abogado.
+    // Cuando hagamos el permiso personalizado, solo se cambia aquí.
+    public function puedeVerConfidencial(): bool
+    {
+        return $this->hasAnyRole(['super_admin', 'abogado']);
+    }
+
     /**
      * Get the attributes that should be cast.
      *
