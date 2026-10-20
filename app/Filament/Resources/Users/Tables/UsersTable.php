@@ -20,23 +20,39 @@ class UsersTable
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('email')
-                    ->label('Correo')
+                TextColumn::make('cargo')
+                    ->label('Cargo')
                     ->searchable(),
 
                 TextColumn::make('roles.name')
                     ->label('Rol')
                     ->badge(),
 
+                TextColumn::make('email')
+                    ->label('Correo')
+                    ->searchable(),
+
+                TextColumn::make('telefono')
+                    ->label('Teléfono')
+                    ->toggleable(),
+
+                TextColumn::make('especialidad')
+                    ->label('Especialidad')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('numero_colegiado')
+                    ->label('Colegiado')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('fecha_ingreso')
+                    ->label('Ingreso')
+                    ->date('d/m/Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 IconColumn::make('activo')
                     ->label('Activo')
                     ->boolean(),
-
-                TextColumn::make('created_at')
-                    ->label('Creado')
-                    ->dateTime('d/m/Y')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('roles')
