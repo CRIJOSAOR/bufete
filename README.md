@@ -67,6 +67,12 @@ Cases include related tasks, hearings/appointments, timeline entries, and privat
 
 Run `php artisan migrate` to create the workflow tables. Back up `storage/app/private/case-files` along with the database, since uploaded case documents are stored on the local private disk. Task and hearing records are tracked in their case; automatic reminders and a cross-case calendar are not included yet.
 
+## Accounting
+
+The internal accounting module tracks agreed fees, partial payments, case and firm expenses, and client-fund movements in separate HNL and USD balances without currency conversion. Payment and client-fund ledgers are immutable; corrections must be recorded as new transactions, and withdrawals cannot exceed the available balance in that currency. Receipts are private under `storage/app/private/accounting-files`. The panel dashboard summarizes amounts according to each role's record scope. Fee statements, payment receipts, expense reports, and client-fund statements can be downloaded as PDFs. This is internal management only; it does not issue tax invoices or replace statutory double-entry accounting. Back up the private accounting files together with the database.
+
+Run `php artisan migrate` to create the case-workflow and accounting tables and their role permissions. In Roles, assign access to each Contabilidad resource and separately grant `Consultar reportes contables` to roles that should see the financial summary on the dashboard.
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

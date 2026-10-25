@@ -3,6 +3,7 @@
 declare(strict_types=1);
 use BezhanSalleh\FilamentShield\Resources\Roles\RoleResource;
 use App\Filament\Resources\Casos\CasoResource as AppCasoResource;
+use App\Filament\Widgets\ContabilidadResumenWidget;
 use Filament\Pages\Dashboard;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
@@ -239,6 +240,7 @@ return [
         'exclude' => [
             AccountWidget::class,
             FilamentInfoWidget::class,
+            ContabilidadResumenWidget::class,
         ],
     ],
 
@@ -256,9 +258,10 @@ return [
     |
     */
 'custom_permissions' => [
-    'ver_confidencial'       => 'Ver información confidencial',
-    'asignar_abogados'       => 'Asignar abogados a casos',
-    'ser_asignable_a_casos'  => 'Puede ser asignado a casos',
+    'ver_confidencial' => 'Ver información confidencial',
+    'asignar_abogados' => 'Asignar abogados a casos',
+    'ser_asignable_a_casos' => 'Puede ser asignado a casos',
+    'consultar_reportes_contables' => 'Consultar reportes contables',
 ],
 
     /*

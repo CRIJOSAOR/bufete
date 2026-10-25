@@ -36,6 +36,21 @@ class Cliente extends Model
         return $this->hasMany(Caso::class);
     }
 
+    public function honorarios(): HasMany
+    {
+        return $this->hasMany(Honorario::class);
+    }
+
+    public function gastos(): HasMany
+    {
+        return $this->hasMany(Gasto::class);
+    }
+
+    public function movimientosFondos(): HasMany
+    {
+        return $this->hasMany(FondoClienteMovimiento::class);
+    }
+
     public function scopeAssignedTo(Builder $query, User $user): Builder
     {
         return $query->whereHas('casos', fn (Builder $query) => $query->assignedTo($user));

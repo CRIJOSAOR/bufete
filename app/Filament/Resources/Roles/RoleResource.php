@@ -3,6 +3,10 @@
 namespace App\Filament\Resources\Roles;
 
 use App\Filament\Resources\Casos\CasoResource;
+use App\Filament\Resources\Contabilidad\FondosCliente\FondoClienteMovimientoResource;
+use App\Filament\Resources\Contabilidad\Gastos\GastoResource;
+use App\Filament\Resources\Contabilidad\Honorarios\HonorarioResource;
+use App\Filament\Resources\Contabilidad\Pagos\PagoResource;
 use App\Models\RoleDataScope;
 use App\Support\RecordAccessScope;
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
@@ -56,7 +60,15 @@ class RoleResource extends ShieldRoleResource
             $options[CasoResource::GENERATE_PDF_PERMISSION] = 'Generar PDF';
         }
 
-        return $options;
+        $availablePermissions = match ($entity['resourceFqcn'] ?? null) {
+            HonorarioResource::class => ['ViewAny:Honorario', 'View:Honorario', 'Create:Honorario', 'Update:Honorario', 'Delete:Honorario', 'DeleteAny:Honorario'],
+            PagoResource::class => ['ViewAny:Pago', 'View:Pago', 'Create:Pago'],
+            GastoResource::class => ['ViewAny:Gasto', 'View:Gasto', 'Create:Gasto', 'Update:Gasto', 'Delete:Gasto', 'DeleteAny:Gasto'],
+            FondoClienteMovimientoResource::class => ['ViewAny:FondoClienteMovimiento', 'View:FondoClienteMovimiento', 'Create:FondoClienteMovimiento'],
+            default => array_keys($options),
+        };
+
+        return array_intersect_key($options, array_fill_keys($availablePermissions, true));
     }
 
     private static function getCustomPermissionsTab(): Component
