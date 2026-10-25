@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Caso extends Model
@@ -45,6 +46,14 @@ class Caso extends Model
                 $caso->creado_por = auth()->id();
             }
         });
+
+        static::deleting(function (Caso $caso): void {
+            if (! $caso->isForceDeleting()) {
+                return;
+            }
+
+            $caso->documentos->each->delete();
+        });
     }
 
     public function cliente(): BelongsTo
@@ -62,21 +71,28 @@ class Caso extends Model
         return $this->belongsTo(User::class, 'creado_por');
     }
 
-    // Qué casos puede ver cada usuario
-    public function scopeVisiblesPara(Builder $query, ?User $user): Builder
+    public function tareas(): HasMany
     {
-        if (! $user) {
-            return $query->whereRaw('1 = 0');
-        }
+        return $this->hasMany(CasoTarea::class);
+    }
 
-        if ($user->hasAnyRole(['super_admin', 'secretaria'])) {
-            return $query;
-        }
+    public function audiencias(): HasMany
+    {
+        return $this->hasMany(CasoAudiencia::class);
+    }
 
-        if ($user->hasRole('abogado')) {
-            return $query->whereHas('abogados', fn ($q) => $q->where('users.id', $user->id));
-        }
+    public function eventos(): HasMany
+    {
+        return $this->hasMany(CasoEvento::class);
+    }
 
-        return $query->whereRaw('1 = 0');
+    public function documentos(): HasMany
+    {
+        return $this->hasMany(CasoDocumento::class);
+    }
+
+    public function scopeAssignedTo(Builder $query, User $user): Builder
+    {
+        return $query->whereHas('abogados', fn (Builder $query) => $query->where('users.id', $user->getKey()));
     }
 }

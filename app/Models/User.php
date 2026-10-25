@@ -29,11 +29,14 @@ class User extends Authenticatable implements FilamentUser
         return (bool) $this->activo;
     }
 
-    // Por ahora "confidencial" lo ven super_admin y abogado.
-    // Cuando hagamos el permiso personalizado, solo se cambia aquí.
     public function puedeVerConfidencial(): bool
     {
-        return $this->hasAnyRole(['super_admin', 'abogado']);
+        return $this->isPermissionAdministrator() || $this->can('ver_confidencial');
+    }
+
+    public function isPermissionAdministrator(): bool
+    {
+        return $this->hasRole(config('filament-shield.super_admin.name', 'super_admin'));
     }
 
     /**

@@ -53,6 +53,20 @@ In order to ensure that the Laravel community is welcoming to all, please review
 
 If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
+## Roles and data access
+
+Roles are managed in the Filament Shield section of the panel. Only users with the configured super-admin role can create roles or change permissions and role assignments.
+
+The role editor separates module actions from record visibility. For each discovered resource, an administrator can choose all records or combine records created by the user with records assigned or related to the user when that model supports assignment. Users inherit these settings from their role; an unconfigured scope grants no records. After adding a Filament resource, run `php artisan shield:generate --all` to generate its standard permissions and policy; the resource appears in the role editor through Shield discovery.
+
+New Filament resources should extend `App\Filament\Resources\BaseResource` to apply the selected record scope to lists and record routes. The created-by option is detected from `creado_por` or `created_by`; a model that supports assignment can expose an Eloquent `scopeAssignedTo(Builder $query, User $user)` method.
+
+## Case files
+
+Cases include related tasks, hearings/appointments, timeline entries, and private document/image attachments. Attachments accept common office documents, PDFs, and JPG/PNG/WEBP images up to 25 MB and are downloaded through an authenticated case-scoped route. The case PDF summarizes these sections and excludes confidential notes by default; including them requires the confidential permission and explicit selection.
+
+Run `php artisan migrate` to create the workflow tables. Back up `storage/app/private/case-files` along with the database, since uploaded case documents are stored on the local private disk. Task and hearing records are tracked in their case; automatic reminders and a cross-case calendar are not included yet.
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

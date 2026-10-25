@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Casos\Schemas;
 
 use App\Models\Caso;
+use App\Models\User;
+use App\Support\RecordAccessScope;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -37,7 +39,10 @@ class CasoForm
                             ->relationship(
                                 'cliente',
                                 'nombre',
-                                fn (Builder $query) => $query->visiblesPara(auth()->user())
+                                fn (Builder $query) => RecordAccessScope::apply(
+                                    $query,
+                                    auth()->user() instanceof User ? auth()->user() : null,
+                                )
                             )
                             ->searchable()
                             ->preload()
@@ -69,14 +74,14 @@ class CasoForm
 
                 Section::make('Abogados asignados')
                     ->columnSpanFull()
-                    ->visible(fn (): bool => auth()->user()->hasRole('super_admin'))
+                    ->visible(fn (): bool => auth()->user()->isPermissionAdministrator() || auth()->user()->can('asignar_abogados'))
                     ->schema([
                         Select::make('abogados')
                             ->label('Abogados')
                             ->relationship(
                                 'abogados',
                                 'name',
-                                fn (Builder $query) => $query->role('abogado')->where('activo', true)
+                                fn (Builder $query) => $query->permission('ser_asignable_a_casos')->where('activo', true)
                             )
                             ->multiple()
                             ->preload()

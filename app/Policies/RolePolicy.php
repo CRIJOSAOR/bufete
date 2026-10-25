@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use Illuminate\Foundation\Auth\User as AuthUser;
+use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -12,64 +12,64 @@ class RolePolicy
 {
     use HandlesAuthorization;
     
-    public function viewAny(AuthUser $authUser): bool
+    public function viewAny(User $authUser): bool
     {
-        return $authUser->can('ViewAny:Role');
+        return $authUser->isPermissionAdministrator();
     }
 
-    public function view(AuthUser $authUser, Role $role): bool
+    public function view(User $authUser, Role $role): bool
     {
-        return $authUser->can('View:Role');
+        return $authUser->isPermissionAdministrator();
     }
 
-    public function create(AuthUser $authUser): bool
+    public function create(User $authUser): bool
     {
-        return $authUser->can('Create:Role');
+        return $authUser->isPermissionAdministrator();
     }
 
-    public function update(AuthUser $authUser, Role $role): bool
+    public function update(User $authUser, Role $role): bool
     {
-        return $authUser->can('Update:Role');
+        return $authUser->isPermissionAdministrator();
     }
 
-    public function delete(AuthUser $authUser, Role $role): bool
+    public function delete(User $authUser, Role $role): bool
     {
-        return $authUser->can('Delete:Role');
+        return $authUser->isPermissionAdministrator();
     }
 
-    public function deleteAny(AuthUser $authUser): bool
+    public function deleteAny(User $authUser): bool
     {
-        return $authUser->can('DeleteAny:Role');
+        return $authUser->isPermissionAdministrator();
     }
 
-    public function restore(AuthUser $authUser, Role $role): bool
+    public function restore(User $authUser, Role $role): bool
     {
-        return $authUser->can('Restore:Role');
+        return $authUser->isPermissionAdministrator();
     }
 
-    public function forceDelete(AuthUser $authUser, Role $role): bool
+    public function forceDelete(User $authUser, Role $role): bool
     {
-        return $authUser->can('ForceDelete:Role');
+        return $authUser->isPermissionAdministrator();
     }
 
-    public function forceDeleteAny(AuthUser $authUser): bool
+    public function forceDeleteAny(User $authUser): bool
     {
-        return $authUser->can('ForceDeleteAny:Role');
+        return $authUser->isPermissionAdministrator();
     }
 
-    public function restoreAny(AuthUser $authUser): bool
+    public function restoreAny(User $authUser): bool
     {
-        return $authUser->can('RestoreAny:Role');
+        return $authUser->isPermissionAdministrator();
     }
 
-    public function replicate(AuthUser $authUser, Role $role): bool
+    public function replicate(User $authUser, Role $role): bool
     {
-        return $authUser->can('Replicate:Role');
+        return $authUser->isPermissionAdministrator();
     }
 
-    public function reorder(AuthUser $authUser): bool
+    public function reorder(User $authUser): bool
     {
-        return $authUser->can('Reorder:Role');
+        return $authUser->isPermissionAdministrator();
     }
 
 }

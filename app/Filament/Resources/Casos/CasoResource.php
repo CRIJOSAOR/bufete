@@ -2,22 +2,24 @@
 
 namespace App\Filament\Resources\Casos;
 
+use App\Filament\Resources\BaseResource;
 use App\Filament\Resources\Casos\Pages\CreateCaso;
 use App\Filament\Resources\Casos\Pages\EditCaso;
 use App\Filament\Resources\Casos\Pages\ListCasos;
+use App\Filament\Resources\Casos\RelationManagers\AudienciasRelationManager;
+use App\Filament\Resources\Casos\RelationManagers\DocumentosRelationManager;
+use App\Filament\Resources\Casos\RelationManagers\EventosRelationManager;
+use App\Filament\Resources\Casos\RelationManagers\TareasRelationManager;
 use App\Filament\Resources\Casos\Schemas\CasoForm;
 use App\Filament\Resources\Casos\Tables\CasosTable;
 use App\Models\Caso;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
 
-class CasoResource extends Resource
+class CasoResource extends BaseResource
 {
     protected static ?string $model = Caso::class;
 
@@ -43,15 +45,13 @@ class CasoResource extends Resource
         return CasosTable::configure($table);
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()->visiblesPara(auth()->user());
-    }
-
     public static function getRelations(): array
     {
         return [
-            //
+            TareasRelationManager::class,
+            AudienciasRelationManager::class,
+            EventosRelationManager::class,
+            DocumentosRelationManager::class,
         ];
     }
 
@@ -64,12 +64,4 @@ class CasoResource extends Resource
         ];
     }
 
-    public static function getRecordRouteBindingEloquentQuery(): Builder
-    {
-        return parent::getRecordRouteBindingEloquentQuery()
-            ->visiblesPara(auth()->user())
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
-    }
 }

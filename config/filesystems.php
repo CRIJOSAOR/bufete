@@ -38,6 +38,16 @@ return [
             'report' => false,
         ],
 
+        'case_files' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/case-files'),
+            'url' => '/case-files',
+            'visibility' => 'private',
+            'serve' => true,
+            'throw' => true,
+            'report' => true,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

@@ -27,7 +27,7 @@ return [
             'pages' => true,
             'widgets' => true,
             'resources' => true,
-            'custom_permissions' => false,
+            'custom_permissions' => true,
         ],
     ],
 
@@ -120,7 +120,7 @@ return [
         'separator' => ':',
         'case' => 'pascal',
         'generate' => true,
-        'format_custom_permission_keys' => true,
+        'format_custom_permission_keys' => false,
     ],
 
     /*
@@ -251,8 +251,11 @@ return [
     | permissions.format_custom_permission_keys to false to use them as-is.
     |
     */
-
-    'custom_permissions' => [],
+'custom_permissions' => [
+    'ver_confidencial'       => 'Ver información confidencial',
+    'asignar_abogados'       => 'Asignar abogados a casos',
+    'ser_asignable_a_casos'  => 'Puede ser asignado a casos',
+],
 
     /*
     |--------------------------------------------------------------------------

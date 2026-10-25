@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Clientes;
 
+use App\Filament\Resources\BaseResource;
 use App\Filament\Resources\Clientes\Pages\CreateCliente;
 use App\Filament\Resources\Clientes\Pages\EditCliente;
 use App\Filament\Resources\Clientes\Pages\ListClientes;
@@ -9,15 +10,12 @@ use App\Filament\Resources\Clientes\Schemas\ClienteForm;
 use App\Filament\Resources\Clientes\Tables\ClientesTable;
 use App\Models\Cliente;
 use BackedEnum;
-use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use UnitEnum;
 
-class ClienteResource extends Resource
+class ClienteResource extends BaseResource
 {
     protected static ?string $model = Cliente::class;
 
@@ -43,11 +41,6 @@ class ClienteResource extends Resource
         return ClientesTable::configure($table);
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()->visiblesPara(auth()->user());
-    }
-
     public static function getRelations(): array
     {
         return [
@@ -64,12 +57,4 @@ class ClienteResource extends Resource
         ];
     }
 
-    public static function getRecordRouteBindingEloquentQuery(): Builder
-    {
-        return parent::getRecordRouteBindingEloquentQuery()
-            ->visiblesPara(auth()->user())
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
-    }
 }

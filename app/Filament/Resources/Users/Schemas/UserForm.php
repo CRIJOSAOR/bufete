@@ -49,7 +49,9 @@ class UserForm
                             ->multiple()
                             ->maxItems(1)
                             ->preload()
-                            ->required()
+                            ->required(fn (): bool => auth()->user()->isPermissionAdministrator())
+                            ->disabled(fn (): bool => ! auth()->user()->isPermissionAdministrator())
+                            ->visible(fn (): bool => auth()->user()->isPermissionAdministrator())
                             ->disabled(fn (?User $record): bool => $record?->is(auth()->user()) ?? false)
                             ->helperText('Cada persona tiene un solo rol.'),
 
