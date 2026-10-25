@@ -17,6 +17,7 @@
         .header { border-bottom: 2px solid #b45309; margin-bottom: 14px; padding-bottom: 10px; }
         .footer { color: #78716c; font-size: 8px; margin-top: 24px; }
         .preserve { white-space: pre-wrap; }
+        .attachment-image { display: block; margin: 8px 0 14px; max-height: 360px; max-width: 100%; }
     </style>
 </head>
 <body>
@@ -77,6 +78,9 @@
             · {{ str($documento->categoria)->headline() }}
             · {{ number_format($documento->tamano / 1024, 0) }} KB
         </p>
+        @if (isset($imagenes[$documento->getKey()]))
+            <img class="attachment-image" src="{{ $imagenes[$documento->getKey()] }}" alt="{{ $documento->titulo }}">
+        @endif
     @empty
         <p class="muted">No hay documentos adjuntos.</p>
     @endforelse

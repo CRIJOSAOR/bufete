@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 use BezhanSalleh\FilamentShield\Resources\Roles\RoleResource;
+use App\Filament\Resources\Casos\CasoResource as AppCasoResource;
 use Filament\Pages\Dashboard;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
@@ -186,6 +187,9 @@ return [
     'resources' => [
         'subject' => 'model',
         'manage' => [
+            AppCasoResource::class => [
+                'generarPdf',
+            ],
             RoleResource::class => [
                 'viewAny',
                 'view',

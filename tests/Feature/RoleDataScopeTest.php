@@ -6,11 +6,13 @@ use App\Models\Caso;
 use App\Models\Cliente;
 use App\Models\RoleDataScope;
 use App\Models\User;
+use App\Filament\Resources\Casos\CasoResource;
 use App\Filament\Resources\Clientes\ClienteResource;
 use App\Filament\Resources\Roles\RoleResource;
 use App\Policies\RolePolicy;
 use App\Policies\UserPolicy;
 use App\Support\RecordAccessScope;
+use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -273,6 +275,16 @@ class RoleDataScopeTest extends TestCase
         );
 
         $this->assertSame(['ver_confidencial'], $selected);
+    }
+
+    public function test_generate_case_pdf_permission_is_listed_under_case_resource_permissions(): void
+    {
+        $caseResource = collect(FilamentShield::getResources())
+            ->firstWhere('resourceFqcn', CasoResource::class);
+
+        $options = RoleResource::getResourcePermissionOptions($caseResource);
+
+        $this->assertSame('Generar PDF', $options[CasoResource::GENERATE_PDF_PERMISSION]);
     }
 
     public function test_only_the_configured_super_admin_can_manage_roles(): void

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Roles;
 
+use App\Filament\Resources\Casos\CasoResource;
 use App\Models\RoleDataScope;
 use App\Support\RecordAccessScope;
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
@@ -45,6 +46,17 @@ class RoleResource extends ShieldRoleResource
     public static function getTabFormComponentForCustomPermissions(): Component
     {
         return static::getCustomPermissionsTab();
+    }
+
+    public static function getResourcePermissionOptions(array $entity): array
+    {
+        $options = parent::getResourcePermissionOptions($entity);
+
+        if (($entity['resourceFqcn'] ?? null) === CasoResource::class) {
+            $options[CasoResource::GENERATE_PDF_PERMISSION] = 'Generar PDF';
+        }
+
+        return $options;
     }
 
     private static function getCustomPermissionsTab(): Component

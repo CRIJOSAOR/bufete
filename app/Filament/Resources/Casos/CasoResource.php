@@ -21,6 +21,8 @@ use UnitEnum;
 
 class CasoResource extends BaseResource
 {
+    public const GENERATE_PDF_PERMISSION = 'GenerarPdf:Caso';
+
     protected static ?string $model = Caso::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBriefcase;

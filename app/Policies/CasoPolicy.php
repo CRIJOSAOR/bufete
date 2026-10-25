@@ -22,6 +22,11 @@ class CasoPolicy
         return $authUser->can('View:Caso');
     }
 
+    public function generarPdf(AuthUser $authUser, Caso $caso): bool
+    {
+        return $authUser->can('GenerarPdf:Caso');
+    }
+
     public function create(AuthUser $authUser): bool
     {
         return $authUser->can('Create:Caso');

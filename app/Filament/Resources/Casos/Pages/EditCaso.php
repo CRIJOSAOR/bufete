@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Casos\Pages;
 
 use App\Filament\Resources\Casos\CasoResource;
 use App\Models\Caso;
+use App\Support\CasoPdfImageEmbedder;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
@@ -25,7 +26,8 @@ class EditCaso extends EditRecord
                 ->label('Exportar expediente PDF')
                 ->icon('heroicon-o-document-arrow-down')
                 ->color('success')
-                ->authorize(fn (Caso $record): bool => Gate::allows('view', $record))
+                ->authorize(fn (Caso $record): bool => Gate::allows('view', $record)
+                    && Gate::allows('generarPdf', $record))
                 ->form([
                     Toggle::make('incluir_confidencial')
                         ->label('Incluir notas confidenciales y estrategia')
@@ -35,6 +37,7 @@ class EditCaso extends EditRecord
                 ])
                 ->action(function (Caso $record, array $data) {
                     Gate::authorize('view', $record);
+                    Gate::authorize('generarPdf', $record);
 
                     $incluirConfidencial = (bool) ($data['incluir_confidencial'] ?? false);
 
@@ -51,9 +54,11 @@ class EditCaso extends EditRecord
                         'eventos.creador',
                         'documentos.subidor',
                     ]);
+                    $imagenes = app(CasoPdfImageEmbedder::class)->embed($record->documentos);
 
                     $pdf = Pdf::loadView('pdf.casos.expediente', [
                         'caso' => $record,
+                        'imagenes' => $imagenes,
                         'incluirConfidencial' => $incluirConfidencial,
                     ])->setPaper('a4');
 

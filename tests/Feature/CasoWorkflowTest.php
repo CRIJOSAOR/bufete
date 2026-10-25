@@ -6,9 +6,11 @@ use App\Models\Caso;
 use App\Models\CasoDocumento;
 use App\Models\RoleDataScope;
 use App\Models\User;
+use App\Support\CasoPdfImageEmbedder;
 use App\Support\RecordAccessScope;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -188,14 +190,17 @@ class CasoWorkflowTest extends TestCase
 
         $publicHtml = view('pdf.casos.expediente', [
             'caso' => $case->load(['cliente', 'abogados', 'tareas.asignado', 'audiencias.responsable', 'eventos.creador', 'documentos.subidor']),
+            'imagenes' => [],
             'incluirConfidencial' => false,
         ])->render();
         $confidentialHtml = view('pdf.casos.expediente', [
             'caso' => $case,
+            'imagenes' => [],
             'incluirConfidencial' => true,
         ])->render();
         $pdfContents = Pdf::loadView('pdf.casos.expediente', [
             'caso' => $case,
+            'imagenes' => [],
             'incluirConfidencial' => false,
         ])->output();
 
@@ -205,9 +210,48 @@ class CasoWorkflowTest extends TestCase
         $this->assertStringContainsString('Tarea que aparece en el expediente', $publicHtml);
     }
 
-    private function userWithCasePermission(string $permissionName): User
+    public function test_case_pdf_generation_requires_its_own_permission(): void
     {
-        $role = Role::create(['name' => 'case-viewer', 'guard_name' => 'web']);
+        $case = $this->createCase('EXP-PDF-PERMISSION');
+        $caseViewer = $this->userWithCasePermission('View:Caso', 'case-viewer');
+        $pdfGenerator = $this->userWithCasePermission('GenerarPdf:Caso', 'pdf-generator');
+
+        $this->assertFalse(Gate::forUser($caseViewer)->allows('generarPdf', $case));
+        $this->assertTrue(Gate::forUser($pdfGenerator)->allows('generarPdf', $case));
+    }
+
+    public function test_case_report_pdf_embeds_uploaded_images(): void
+    {
+        Storage::fake('case_files');
+        $case = $this->createCase('EXP-PDF-IMAGE');
+        $path = 'casos/'.$case->getKey().'/evidencia.png';
+        Storage::disk('case_files')->put($path, base64_decode(
+            'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+j8ioAAAAASUVORK5CYII=',
+            true,
+        ));
+        $document = $this->createDocument($case, $path);
+        $document->update(['mime_type' => 'image/png']);
+
+        $imagenes = app(CasoPdfImageEmbedder::class)->embed($case->documentos);
+        $html = view('pdf.casos.expediente', [
+            'caso' => $case->load(['cliente', 'abogados', 'tareas.asignado', 'audiencias.responsable', 'eventos.creador', 'documentos.subidor']),
+            'imagenes' => $imagenes,
+            'incluirConfidencial' => false,
+        ])->render();
+        $pdfContents = Pdf::loadView('pdf.casos.expediente', [
+            'caso' => $case->load(['cliente', 'abogados', 'tareas.asignado', 'audiencias.responsable', 'eventos.creador', 'documentos.subidor']),
+            'imagenes' => $imagenes,
+            'incluirConfidencial' => false,
+        ])->output();
+
+        $this->assertStringContainsString('<img class="attachment-image"', $html);
+        $this->assertStringContainsString('src="data:image/png;base64,', $html);
+        $this->assertStringStartsWith('%PDF-', $pdfContents);
+    }
+
+    private function userWithCasePermission(string $permissionName, string $roleName = 'case-viewer'): User
+    {
+        $role = Role::create(['name' => $roleName, 'guard_name' => 'web']);
         $role->givePermissionTo(Permission::create([
             'name' => $permissionName,
             'guard_name' => 'web',

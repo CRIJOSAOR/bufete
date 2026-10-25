@@ -63,7 +63,7 @@ New Filament resources should extend `App\Filament\Resources\BaseResource` to ap
 
 ## Case files
 
-Cases include related tasks, hearings/appointments, timeline entries, and private document/image attachments. Attachments accept common office documents, PDFs, and JPG/PNG/WEBP images up to 25 MB and are downloaded through an authenticated case-scoped route. The case PDF summarizes these sections and excludes confidential notes by default; including them requires the confidential permission and explicit selection.
+Cases include related tasks, hearings/appointments, timeline entries, and private document/image attachments. Attachments accept common office documents, PDFs, and JPG/PNG/WEBP images up to 25 MB and are downloaded through an authenticated case-scoped route. The case PDF summarizes these sections, embeds attached images, and excludes confidential notes by default; generating the PDF requires the `Generar PDF` permission under Roles > Resources > Cases, while including confidential notes requires its separate permission and explicit selection.
 
 Run `php artisan migrate` to create the workflow tables. Back up `storage/app/private/case-files` along with the database, since uploaded case documents are stored on the local private disk. Task and hearing records are tracked in their case; automatic reminders and a cross-case calendar are not included yet.
 
