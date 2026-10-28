@@ -5,7 +5,6 @@ namespace App\Filament\Widgets;
 use App\Models\FondoClienteMovimiento;
 use App\Models\Gasto;
 use App\Models\Honorario;
-use App\Models\Pago;
 use App\Models\User;
 use App\Support\AccountingMoney;
 use App\Support\RecordAccessScope;
@@ -15,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class ContabilidadResumenWidget extends StatsOverviewWidget
 {
-    protected static ?int $sort = 10;
+    protected static ?int $sort = 2;
 
     protected ?string $heading = 'Resumen financiero';
 

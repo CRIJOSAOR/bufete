@@ -8,26 +8,28 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Caso extends Model
 {
-    use SoftDeletes;
+    use LogsActivity, SoftDeletes;
 
     public const TIPOS = [
-        'civil'     => 'Civil',
-        'familia'   => 'Familia',
+        'civil' => 'Civil',
+        'familia' => 'Familia',
         'mercantil' => 'Mercantil',
-        'penal'     => 'Penal',
-        'laboral'   => 'Laboral',
+        'penal' => 'Penal',
+        'laboral' => 'Laboral',
         'registral' => 'Bienes y registro',
     ];
 
     public const ESTADOS = [
-        'abierto'    => 'Abierto',
+        'abierto' => 'Abierto',
         'en_tramite' => 'En trámite',
-        'en_espera'  => 'En espera',
-        'cerrado'    => 'Cerrado',
-        'archivado'  => 'Archivado',
+        'en_espera' => 'En espera',
+        'cerrado' => 'Cerrado',
+        'archivado' => 'Archivado',
     ];
 
     protected $fillable = [
@@ -54,6 +56,22 @@ class Caso extends Model
 
             $caso->documentos->each->delete();
         });
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('casos')
+            ->logOnly(['numero', 'titulo', 'tipo', 'juzgado', 'estado', 'fecha_inicio'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(fn (string $event): string => match ($event) {
+                'created' => "Se creó el expediente {$this->numero}",
+                'updated' => "Se actualizó el expediente {$this->numero}",
+                'deleted' => "Se archivó el expediente {$this->numero}",
+                'restored' => "Se restauró el expediente {$this->numero}",
+                default => "Se modificó el expediente {$this->numero}",
+            });
     }
 
     public function cliente(): BelongsTo

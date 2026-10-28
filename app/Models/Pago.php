@@ -6,9 +6,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Pago extends Model
 {
+    use LogsActivity;
+
     protected $fillable = [
         'honorario_id', 'registrado_por', 'monto', 'fecha_pago', 'metodo',
         'referencia', 'comprobante_ruta', 'comprobante_original',
@@ -41,6 +45,18 @@ class Pago extends Model
         static::updating(function (): never {
             throw new \LogicException('Los pagos son inmutables; registre un ajuste en lugar de editarlos.');
         });
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('pagos')
+            ->logOnly(['monto', 'fecha_pago', 'metodo'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(fn (string $event): string => $event === 'created'
+                ? 'Se registró un pago'
+                : 'Se modificó un pago');
     }
 
     public function honorario(): BelongsTo

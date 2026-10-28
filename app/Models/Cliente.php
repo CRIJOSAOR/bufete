@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Cliente extends Model
 {
-    use SoftDeletes;
+    use LogsActivity, SoftDeletes;
 
     protected $fillable = [
         'tipo', 'nombre', 'documento', 'telefono', 'correo',
@@ -24,6 +26,22 @@ class Cliente extends Model
                 $cliente->creado_por = auth()->id();
             }
         });
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->useLogName('clientes')
+            ->logOnly(['tipo', 'nombre'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs()
+            ->setDescriptionForEvent(fn (string $event): string => match ($event) {
+                'created' => "Se registró el cliente {$this->nombre}",
+                'updated' => "Se actualizó el cliente {$this->nombre}",
+                'deleted' => "Se archivó el cliente {$this->nombre}",
+                'restored' => "Se restauró el cliente {$this->nombre}",
+                default => "Se modificó el cliente {$this->nombre}",
+            });
     }
 
     public function creador(): BelongsTo

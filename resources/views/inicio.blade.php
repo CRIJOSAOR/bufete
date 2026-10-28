@@ -5,39 +5,47 @@
 @section('content')
 
 {{-- Portada --}}
-<section class="relative bg-navy text-white bg-cover bg-center"
+<section class="relative isolate overflow-hidden bg-navy bg-cover bg-center text-white"
          style="background-image: url('{{ asset('img/portada.jpg') }}')">
-    <div class="absolute inset-0 bg-navy/80"></div>
-    <div class="relative max-w-6xl mx-auto px-6 py-24 md:py-32">
-        <p class="text-gold font-medium tracking-widest text-sm uppercase mb-4">Asesoría jurídica integral</p>
-        <h1 class="font-serif text-4xl md:text-6xl font-bold leading-tight max-w-3xl">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-r from-navy/95 via-navy/80 to-navy/45"></div>
+    <div class="mx-auto max-w-7xl px-6 py-24 md:py-36 lg:px-8">
+        <p class="mb-6 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.24em] text-gold sm:text-sm">
+            <span class="h-px w-8 bg-gold"></span>
+            Asesoría jurídica integral
+        </p>
+        <h1 class="max-w-4xl font-serif text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
             {{ config('bufete.eslogan') }}
         </h1>
-        <p class="mt-6 text-lg text-slate-300 max-w-2xl">
+        <p class="mt-7 max-w-2xl text-base leading-7 text-slate-200 sm:text-lg sm:leading-8">
             Acompañamos a personas y empresas en cada etapa de su proceso legal, con atención cercana y resultados claros.
         </p>
         <div class="mt-10 flex flex-wrap gap-4">
-            <a href="#contacto" class="bg-gold text-white font-medium px-6 py-3 rounded hover:opacity-90">Agendar consulta</a>
-            <a href="#areas" class="border border-white/40 px-6 py-3 rounded hover:bg-white/10">Ver áreas de práctica</a>
+            <a href="#contacto" class="inline-flex items-center justify-center rounded-full bg-gold px-7 py-3.5 font-semibold text-navy shadow-lg shadow-black/15 transition hover:-translate-y-0.5 hover:bg-white">
+                Agendar consulta
+                @svg('heroicon-o-arrow-up-right', 'ml-2 size-4')
+            </a>
+            <a href="#areas" class="inline-flex items-center justify-center rounded-full border border-white/40 bg-white/5 px-7 py-3.5 font-semibold text-white backdrop-blur-sm transition hover:border-white hover:bg-white/10">
+                Ver áreas de práctica
+            </a>
         </div>
     </div>
 </section>
 
 {{-- Áreas de práctica --}}
-<section id="areas" class="py-20 bg-slate-50">
-    <div class="max-w-6xl mx-auto px-6">
-        <h2 class="font-serif text-3xl md:text-4xl font-bold text-navy text-center">Áreas de práctica</h2>
-        <p class="text-center mt-3 text-slate-500">Asesoría especializada para cada necesidad</p>
+<section id="areas" class="scroll-mt-24 bg-slate-50 py-20 md:py-24">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <p class="text-center text-xs font-semibold uppercase tracking-[0.2em] text-gold">Experiencia a su servicio</p>
+        <h2 class="mt-3 text-center font-serif text-3xl font-semibold text-navy md:text-4xl">Áreas de práctica</h2>
+        <p class="mt-3 text-center text-slate-500">Asesoría especializada para cada necesidad</p>
 
-        <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             @foreach (config('bufete.areas') as $area)
-                <div class="bg-white p-8 rounded-lg border border-slate-200 hover:border-gold hover:shadow-lg transition">
-                    <div class="w-14 h-14 rounded-full bg-navy text-gold flex items-center justify-center">
-                        @svg('heroicon-o-' . $area[0], 'w-7 h-7')
+                <div class="group rounded-2xl border border-slate-200/80 bg-white p-7 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-gold/60 hover:shadow-xl hover:shadow-navy/5 sm:p-8">
+                    <div class="flex size-14 items-center justify-center rounded-2xl bg-navy text-gold transition duration-300 group-hover:bg-gold group-hover:text-navy">
+                        @svg('heroicon-o-' . $area[0], 'size-7')
                     </div>
-                    <h3 class="mt-5 font-serif text-xl font-semibold text-navy">{{ $area[1] }}</h3>
-                    <div class="mt-3 w-10 h-0.5 bg-gold"></div>
-                    <p class="mt-3 text-sm text-slate-600">{{ $area[2] }}</p>
+                    <h3 class="mt-6 font-serif text-xl font-semibold text-navy">{{ $area[1] }}</h3>
+                    <p class="mt-3 text-sm leading-6 text-slate-600">{{ $area[2] }}</p>
                 </div>
             @endforeach
         </div>
@@ -45,15 +53,16 @@
 </section>
 
 {{-- Cómo trabajamos --}}
-<section id="proceso" class="py-20">
-    <div class="max-w-6xl mx-auto px-6">
-        <h2 class="font-serif text-3xl md:text-4xl font-bold text-navy text-center">Cómo trabajamos</h2>
+<section id="proceso" class="scroll-mt-24 py-20 md:py-24">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <p class="text-center text-xs font-semibold uppercase tracking-[0.2em] text-gold">Un proceso claro</p>
+        <h2 class="mt-3 text-center font-serif text-3xl font-semibold text-navy md:text-4xl">Cómo trabajamos</h2>
         <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             @foreach (config('bufete.pasos') as $paso)
-                <div class="text-center">
-                    <div class="mx-auto w-12 h-12 rounded-full bg-gold text-white font-serif text-xl font-bold flex items-center justify-center">{{ $paso[0] }}</div>
-                    <h3 class="mt-4 font-semibold text-navy">{{ $paso[1] }}</h3>
-                    <p class="mt-1 text-sm text-slate-600">{{ $paso[2] }}</p>
+                <div class="rounded-2xl border border-slate-200/80 bg-white p-6 text-center shadow-sm">
+                    <div class="mx-auto flex size-12 items-center justify-center rounded-full bg-gold/15 font-serif text-xl font-bold text-navy ring-1 ring-gold/30">{{ $paso[0] }}</div>
+                    <h3 class="mt-5 font-semibold text-navy">{{ $paso[1] }}</h3>
+                    <p class="mt-2 text-sm leading-6 text-slate-600">{{ $paso[2] }}</p>
                 </div>
             @endforeach
         </div>
@@ -61,34 +70,35 @@
 </section>
 
 {{-- Nosotros --}}
-<section id="nosotros" class="py-20 bg-slate-50">
-    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+<section id="nosotros" class="scroll-mt-24 bg-slate-50 py-20 md:py-24">
+    <div class="mx-auto grid max-w-7xl items-center gap-12 px-6 md:grid-cols-2 lg:px-8">
         <div>
             @if (file_exists(public_path('img/nosotros.jpg')))
                 <img src="{{ asset('img/nosotros.jpg') }}" alt="Nuestro bufete"
-                     class="w-full h-96 object-cover rounded-lg shadow-lg">
+                     class="h-80 w-full rounded-3xl object-cover shadow-xl shadow-navy/10 sm:h-96">
             @else
-                <div class="w-full h-96 rounded-lg bg-navy"></div>
+                <div class="h-80 w-full rounded-3xl bg-navy sm:h-96"></div>
             @endif
         </div>
 
         <div>
-            <h2 class="font-serif text-3xl md:text-4xl font-bold text-navy">Sobre nosotros</h2>
-            <p class="mt-6 leading-relaxed">
+            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Compromiso y confianza</p>
+            <h2 class="mt-3 font-serif text-3xl font-semibold text-navy md:text-4xl">Sobre nosotros</h2>
+            <p class="mt-6 leading-7 text-slate-600">
                 Somos un bufete comprometido con la defensa de los intereses de nuestros clientes.
                 Combinamos conocimiento jurídico, ética profesional y trato humano para ofrecer
                 soluciones claras y oportunas.
             </p>
-            <p class="mt-4 leading-relaxed">
+            <p class="mt-4 leading-7 text-slate-600">
                 Cada caso es único, por eso le dedicamos el tiempo necesario para entender su
                 situación y diseñar la mejor estrategia.
             </p>
 
             <div class="mt-8 grid grid-cols-3 gap-4 text-center">
                 @foreach (config('bufete.cifras') as $cifra)
-                    <div class="bg-navy text-white rounded-lg p-4">
-                        <p class="font-serif text-2xl font-bold text-gold">{{ $cifra[0] }}</p>
-                        <p class="text-xs mt-1">{{ $cifra[1] }}</p>
+                    <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                        <p class="font-serif text-2xl font-bold text-navy">{{ $cifra[0] }}</p>
+                        <p class="mt-2 text-xs leading-5 text-slate-500">{{ $cifra[1] }}</p>
                     </div>
                 @endforeach
             </div>
@@ -97,24 +107,25 @@
 </section>
 
 {{-- Equipo --}}
-<section id="equipo" class="py-20">
-    <div class="max-w-6xl mx-auto px-6">
-        <h2 class="font-serif text-3xl md:text-4xl font-bold text-navy text-center">Nuestro equipo</h2>
+<section id="equipo" class="scroll-mt-24 py-20 md:py-24">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <p class="text-center text-xs font-semibold uppercase tracking-[0.2em] text-gold">Atención personal</p>
+        <h2 class="mt-3 text-center font-serif text-3xl font-semibold text-navy md:text-4xl">Nuestro equipo</h2>
         <div class="mt-12 grid gap-8 sm:grid-cols-3">
             @foreach (config('bufete.equipo') as $persona)
                 @php
                     $foto = $persona[3] ?? null;
                     $existe = $foto && file_exists(public_path('img/equipo/' . $foto));
                 @endphp
-                <div class="text-center">
+                <div class="rounded-2xl border border-slate-200/80 bg-white p-6 text-center shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-navy/5">
                     @if ($existe)
                         <img src="{{ asset('img/equipo/' . $foto) }}" alt="{{ $persona[1] }}"
-                             class="mx-auto w-40 h-40 rounded-full object-cover border-4 border-gold/30">
+                             class="mx-auto size-36 rounded-full border-4 border-gold/25 object-cover shadow-md sm:size-40">
                     @else
-                        <div class="mx-auto w-40 h-40 rounded-full bg-navy text-gold font-serif text-4xl font-bold flex items-center justify-center">{{ $persona[0] }}</div>
+                        <div class="mx-auto flex size-36 items-center justify-center rounded-full bg-navy font-serif text-4xl font-bold text-gold sm:size-40">{{ $persona[0] }}</div>
                     @endif
-                    <h3 class="mt-4 font-serif text-lg font-semibold text-navy">{{ $persona[1] }}</h3>
-                    <p class="text-sm text-slate-500">{{ $persona[2] }}</p>
+                    <h3 class="mt-5 font-serif text-lg font-semibold text-navy">{{ $persona[1] }}</h3>
+                    <p class="mt-1 text-sm text-slate-500">{{ $persona[2] }}</p>
                 </div>
             @endforeach
         </div>
@@ -122,14 +133,20 @@
 </section>
 
 {{-- Preguntas frecuentes --}}
-<section id="preguntas" class="py-20 bg-slate-50">
-    <div class="max-w-3xl mx-auto px-6">
-        <h2 class="font-serif text-3xl md:text-4xl font-bold text-navy text-center">Preguntas frecuentes</h2>
-        <div class="mt-10 space-y-3">
+<section id="preguntas" class="scroll-mt-24 bg-slate-50 py-20 md:py-24">
+    <div class="mx-auto max-w-3xl px-6">
+        <p class="text-center text-xs font-semibold uppercase tracking-[0.2em] text-gold">Estamos para orientarle</p>
+        <h2 class="mt-3 text-center font-serif text-3xl font-semibold text-navy md:text-4xl">Preguntas frecuentes</h2>
+        <div class="mt-10 grid gap-3">
             @foreach (config('bufete.preguntas') as $p)
-                <details class="bg-white border border-slate-200 rounded-lg p-5">
-                    <summary class="font-medium text-navy cursor-pointer">{{ $p[0] }}</summary>
-                    <p class="mt-3 text-sm text-slate-600">{{ $p[1] }}</p>
+                <details class="group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm open:border-gold/40">
+                    <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-medium text-navy [&::-webkit-details-marker]:hidden">
+                        {{ $p[0] }}
+                        <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-slate-50 text-gold transition group-open:rotate-45">
+                            @svg('heroicon-o-plus', 'size-4')
+                        </span>
+                    </summary>
+                    <p class="mt-4 border-t border-slate-100 pt-4 text-sm leading-6 text-slate-600">{{ $p[1] }}</p>
                 </details>
             @endforeach
         </div>
@@ -137,9 +154,10 @@
 </section>
 
 {{-- Contacto --}}
-<section id="contacto" class="py-20">
-    <div class="max-w-6xl mx-auto px-6 text-center">
-        <h2 class="font-serif text-3xl md:text-4xl font-bold text-navy">Contáctenos</h2>
+<section id="contacto" class="scroll-mt-24 py-20 md:py-24">
+    <div class="mx-auto max-w-7xl px-6 text-center lg:px-8">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Conversemos</p>
+        <h2 class="mt-3 font-serif text-3xl font-semibold text-navy md:text-4xl">Contáctenos</h2>
         <p class="mt-4 text-slate-600">Cuéntenos su caso y le responderemos a la brevedad.</p>
 
         <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 text-sm">
@@ -153,9 +171,9 @@
             @endphp
 
             @foreach ($contacto as $dato)
-                <div class="p-6 border border-slate-200 rounded-lg">
-                    <div class="mx-auto w-12 h-12 rounded-full bg-navy text-gold flex items-center justify-center">
-                        @svg('heroicon-o-' . $dato[0], 'w-6 h-6')
+                <div class="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm">
+                    <div class="mx-auto flex size-12 items-center justify-center rounded-2xl bg-navy text-gold">
+                        @svg('heroicon-o-' . $dato[0], 'size-6')
                     </div>
                     <p class="mt-3 text-xs font-semibold uppercase tracking-widest text-gold">{{ $dato[1] }}</p>
                     <p class="mt-1">{{ $dato[2] }}</p>
@@ -165,7 +183,7 @@
 
         <a href="https://wa.me/{{ config('bufete.whatsapp') }}?text={{ urlencode('Hola, quisiera una consulta.') }}"
            target="_blank" rel="noopener"
-           class="inline-block mt-10 bg-navy text-white font-medium px-8 py-3 rounded hover:bg-gold transition">
+           class="mt-10 inline-flex items-center justify-center rounded-full bg-navy px-8 py-3.5 font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:bg-gold">
             Escribir por WhatsApp
         </a>
     </div>
