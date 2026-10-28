@@ -7,15 +7,15 @@ use App\Filament\Resources\Contabilidad\FondosCliente\FondoClienteMovimientoReso
 use App\Filament\Resources\Contabilidad\Gastos\GastoResource;
 use App\Filament\Resources\Contabilidad\Honorarios\HonorarioResource;
 use App\Filament\Resources\Contabilidad\Pagos\PagoResource;
+use App\Filament\Resources\Roles\Pages\CreateRole;
+use App\Filament\Resources\Roles\Pages\EditRole;
 use App\Models\RoleDataScope;
 use App\Support\RecordAccessScope;
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
-use BezhanSalleh\FilamentShield\Support\Utils;
 use BezhanSalleh\FilamentShield\Resources\Roles\Pages\ListRoles;
 use BezhanSalleh\FilamentShield\Resources\Roles\Pages\ViewRole;
 use BezhanSalleh\FilamentShield\Resources\Roles\RoleResource as ShieldRoleResource;
-use App\Filament\Resources\Roles\Pages\CreateRole;
-use App\Filament\Resources\Roles\Pages\EditRole;
+use BezhanSalleh\FilamentShield\Support\Utils;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Grid;
@@ -50,6 +50,28 @@ class RoleResource extends ShieldRoleResource
     public static function getTabFormComponentForCustomPermissions(): Component
     {
         return static::getCustomPermissionsTab();
+    }
+
+    public static function getResourceEntitiesSchema(): ?array
+    {
+        return collect(FilamentShield::getResources())
+            ->map(function (array $entity): Section {
+                $sectionLabel = strval(
+                    static::shield()->hasLocalizedPermissionLabels()
+                        ? FilamentShield::getLocalizedResourceLabel($entity['resourceFqcn'])
+                        : $entity['model']
+                );
+
+                return Section::make($sectionLabel)
+                    ->compact()
+                    ->schema([
+                        static::getCheckBoxListComponentForResource($entity),
+                    ])
+                    ->columnSpan(static::shield()->getSectionColumnSpan())
+                    ->collapsible()
+                    ->collapsed();
+            })
+            ->toArray();
     }
 
     public static function getResourcePermissionOptions(array $entity): array
