@@ -6,7 +6,10 @@ use App\Filament\Widgets\AccesosRapidosWidget;
 use App\Filament\Widgets\ActividadRecienteWidget;
 use App\Filament\Widgets\ContabilidadResumenWidget;
 use App\Filament\Widgets\DashboardAgendaWidget;
+use App\Filament\Widgets\DashboardCasosChartWidget;
 use App\Filament\Widgets\DashboardCasosWidget;
+use App\Filament\Widgets\DashboardFinanzasHnlChartWidget;
+use App\Filament\Widgets\DashboardFinanzasUsdChartWidget;
 use App\Filament\Widgets\MisTareasWidget;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Http\Middleware\Authenticate;
@@ -957,6 +960,9 @@ class PanelPanelProvider extends PanelProvider
                 AccountWidget::class,
                 DashboardAgendaWidget::class,
                 DashboardCasosWidget::class,
+                DashboardCasosChartWidget::class,
+                DashboardFinanzasHnlChartWidget::class,
+                DashboardFinanzasUsdChartWidget::class,
                 MisTareasWidget::class,
                 AccesosRapidosWidget::class,
                 ActividadRecienteWidget::class,
