@@ -2,21 +2,31 @@
 
 @section('content')
     <div class="header">
-        <p class="muted">ESTADO DE CUENTA</p>
+        <p class="eyebrow">ESTADO DE CUENTA</p>
         <h1>Honorario #{{ $honorario->getKey() }}</h1>
         <p class="muted">Generado {{ now()->format('d/m/Y H:i') }}</p>
     </div>
-    <p><strong>Cliente:</strong> {{ $honorario->cliente->nombre }}</p>
-    <p><strong>Caso:</strong> {{ $honorario->caso?->numero ?? 'General' }} {{ $honorario->caso?->titulo }}</p>
-    <p><strong>Concepto:</strong> {{ $honorario->concepto }}</p>
-    <p><strong>Modalidad:</strong> {{ str($honorario->modalidad)->replace('_', ' ')->headline() }}</p>
-    <p><strong>Monto acordado:</strong> {{ $honorario->moneda }} {{ \App\Support\AccountingMoney::formatAmount($honorario->monto_acordado) }}</p>
-    <p><strong>Total pagado:</strong> {{ $honorario->moneda }} {{ \App\Support\AccountingMoney::formatAmount($honorario->total_pagado) }}</p>
-    <p class="amount"><strong>Saldo:</strong> {{ $honorario->moneda }} {{ \App\Support\AccountingMoney::formatAmount($honorario->saldo) }}</p>
-    <p><strong>Vencimiento:</strong> {{ $honorario->fecha_vencimiento?->format('d/m/Y') ?? 'No definido' }}</p>
+    <table class="details">
+        <tbody>
+            <tr><th>Cliente</th><td>{{ $honorario->cliente->nombre }}</td></tr>
+            <tr><th>Caso</th><td>{{ $honorario->caso?->numero ?? 'General' }} {{ $honorario->caso?->titulo }}</td></tr>
+            <tr><th>Concepto</th><td>{{ $honorario->concepto }}</td></tr>
+            <tr><th>Modalidad</th><td>{{ str($honorario->modalidad)->replace('_', ' ')->headline() }}</td></tr>
+            <tr><th>Vencimiento</th><td>{{ $honorario->fecha_vencimiento?->format('d/m/Y') ?? 'No definido' }}</td></tr>
+        </tbody>
+    </table>
+
+    <table class="summary">
+        <thead><tr><th>Monto acordado</th><th>Total pagado</th><th>Saldo</th></tr></thead>
+        <tbody><tr>
+            <td>{{ $honorario->moneda }} {{ \App\Support\AccountingMoney::formatAmount($honorario->monto_acordado) }}</td>
+            <td>{{ $honorario->moneda }} {{ \App\Support\AccountingMoney::formatAmount($honorario->total_pagado) }}</td>
+            <td class="balance">{{ $honorario->moneda }} {{ \App\Support\AccountingMoney::formatAmount($honorario->saldo) }}</td>
+        </tr></tbody>
+    </table>
 
     <h2>Pagos registrados</h2>
-    <table>
+    <table class="data-table">
         <thead><tr><th>Fecha</th><th>Método</th><th>Referencia</th><th>Monto</th></tr></thead>
         <tbody>
         @forelse ($honorario->pagos as $pago)

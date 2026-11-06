@@ -94,7 +94,7 @@
                 situación y diseñar la mejor estrategia.
             </p>
 
-            <div class="mt-8 grid grid-cols-3 gap-4 text-center">
+            <div class="mt-8 grid grid-cols-1 gap-4 text-center sm:grid-cols-3">
                 @foreach (config('bufete.cifras') as $cifra)
                     <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                         <p class="font-serif text-2xl font-bold text-navy">{{ $cifra[0] }}</p>

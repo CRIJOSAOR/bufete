@@ -9,6 +9,7 @@ use App\Models\Cliente;
 use App\Models\RoleDataScope;
 use App\Models\User;
 use App\Support\RecordAccessScope;
+use Filament\Actions\Testing\TestAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Spatie\Permission\Models\Permission;
@@ -62,7 +63,9 @@ class MisTareasWidgetTest extends TestCase
             ->assertDontSee('Tarea de otro responsable')
             ->assertDontSee('Tarea ya completada')
             ->assertDontSee('Tarea de caso privado')
-            ->assertDontSee(CasoResource::getUrl('edit', ['record' => $visibleCase]));
+            ->assertDontSee(CasoResource::getUrl('edit', ['record' => $visibleCase]))
+            ->callAction(TestAction::make('downloadExcel')->table())
+            ->assertFileDownloaded(contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     }
 
     public function test_dashboard_hides_my_tasks_without_both_case_view_permissions(): void

@@ -11,6 +11,8 @@ use App\Models\Gasto;
 use App\Models\Honorario;
 use App\Support\ContabilidadFormOptions;
 use App\Support\ContabilidadPdf;
+use App\Support\TableExcelExport;
+use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
@@ -29,7 +31,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use BackedEnum;
 use UnitEnum;
 
 class GastoResource extends BaseResource
@@ -114,6 +115,7 @@ class GastoResource extends BaseResource
         return $table
             ->modifyQueryUsing(fn (Builder $query) => $query->with(['cliente', 'caso']))
             ->defaultSort('fecha', 'desc')
+            ->headerActions([TableExcelExport::action()])
             ->columns([
                 TextColumn::make('fecha')->label('Fecha')->date('d/m/Y')->sortable(),
                 TextColumn::make('concepto')->label('Concepto')->searchable()->wrap(),

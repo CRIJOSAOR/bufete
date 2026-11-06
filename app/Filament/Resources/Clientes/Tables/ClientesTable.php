@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Clientes\Tables;
 
+use App\Support\TableExcelExport;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -17,6 +18,7 @@ class ClientesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->headerActions([TableExcelExport::action()])
             ->columns([
                 TextColumn::make('nombre')
                     ->label('Nombre')
@@ -55,7 +57,7 @@ class ClientesTable
                 SelectFilter::make('tipo')
                     ->label('Tipo')
                     ->options([
-                        'natural'  => 'Persona natural',
+                        'natural' => 'Persona natural',
                         'juridica' => 'Persona jurídica',
                     ]),
                 TrashedFilter::make()->label('Eliminados'),

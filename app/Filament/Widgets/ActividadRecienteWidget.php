@@ -9,6 +9,7 @@ use App\Models\Caso;
 use App\Models\Cliente;
 use App\Models\Pago;
 use App\Models\User;
+use App\Support\TableExcelExport;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
@@ -37,6 +38,7 @@ class ActividadRecienteWidget extends TableWidget
         return $table
             ->query(fn (): Builder => $this->activityQuery())
             ->defaultSort('created_at', 'desc')
+            ->headerActions([TableExcelExport::action()])
             ->paginated(false)
             ->emptyStateHeading('Sin actividad reciente')
             ->emptyStateDescription('Los cambios de tus casos, clientes y pagos aparecerán aquí.')

@@ -9,10 +9,11 @@ use App\Filament\Resources\Contabilidad\Honorarios\HonorarioResource;
 use App\Filament\Resources\Contabilidad\Pagos\PagoResource;
 use App\Filament\Resources\Roles\Pages\CreateRole;
 use App\Filament\Resources\Roles\Pages\EditRole;
+use App\Filament\Resources\Roles\Pages\ListRoles;
 use App\Models\RoleDataScope;
 use App\Support\RecordAccessScope;
+use App\Support\TableExcelExport;
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
-use BezhanSalleh\FilamentShield\Resources\Roles\Pages\ListRoles;
 use BezhanSalleh\FilamentShield\Resources\Roles\Pages\ViewRole;
 use BezhanSalleh\FilamentShield\Resources\Roles\RoleResource as ShieldRoleResource;
 use BezhanSalleh\FilamentShield\Support\Utils;
@@ -23,6 +24,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Set;
+use Filament\Tables\Table;
 use Spatie\Permission\Models\Role;
 
 class RoleResource extends ShieldRoleResource
@@ -163,6 +165,12 @@ class RoleResource extends ShieldRoleResource
             })
             ->values()
             ->all();
+    }
+
+    public static function table(Table $table): Table
+    {
+        return parent::table($table)
+            ->headerActions([TableExcelExport::action()]);
     }
 
     public static function getPages(): array

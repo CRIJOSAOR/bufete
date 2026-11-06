@@ -7,6 +7,7 @@ use App\Models\Caso;
 use App\Models\CasoTarea;
 use App\Models\User;
 use App\Support\RecordAccessScope;
+use App\Support\TableExcelExport;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
@@ -50,6 +51,7 @@ class MisTareasWidget extends TableWidget
             ->query($user instanceof User
                 ? self::queryForUser($user)
                 : CasoTarea::query()->whereRaw('1 = 0'))
+            ->headerActions([TableExcelExport::action()])
             ->heading('Mis tareas')
             ->description('Pendientes asignadas a ti en los casos que puedes consultar.')
             ->emptyStateHeading('No tienes tareas pendientes')

@@ -8,10 +8,12 @@ use App\Filament\Resources\Contabilidad\Honorarios\Pages\EditHonorario;
 use App\Filament\Resources\Contabilidad\Honorarios\Pages\ListHonorarios;
 use App\Models\Caso;
 use App\Models\Honorario;
-use App\Models\User;
 use App\Support\ContabilidadFormOptions;
-use Filament\Actions\EditAction;
+use App\Support\ContabilidadPdf;
+use App\Support\TableExcelExport;
+use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -25,7 +27,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use BackedEnum;
 use UnitEnum;
 
 class HonorarioResource extends BaseResource
@@ -114,6 +115,7 @@ class HonorarioResource extends BaseResource
         return $table
             ->modifyQueryUsing(fn (Builder $query) => $query->withTotalPagado()->with(['cliente', 'caso']))
             ->defaultSort('created_at', 'desc')
+            ->headerActions([TableExcelExport::action()])
             ->columns([
                 TextColumn::make('cliente.nombre')->label('Cliente')->searchable()->sortable(),
                 TextColumn::make('caso.numero')->label('Expediente')->placeholder('General')->searchable(),
@@ -139,7 +141,7 @@ class HonorarioResource extends BaseResource
                     ->label('Estado de cuenta PDF')
                     ->icon('heroicon-o-document-arrow-down')
                     ->authorize(fn (Honorario $record): bool => auth()->user()->can('view', $record))
-                    ->action(fn (Honorario $record, \App\Support\ContabilidadPdf $pdf) => $pdf->honorario($record)),
+                    ->action(fn (Honorario $record, ContabilidadPdf $pdf) => $pdf->honorario($record)),
                 EditAction::make(),
             ]);
     }

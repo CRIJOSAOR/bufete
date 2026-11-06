@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
+use App\Support\TableExcelExport;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -14,6 +15,7 @@ class UsersTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->headerActions([TableExcelExport::action()])
             ->columns([
                 TextColumn::make('name')
                     ->label('Nombre')

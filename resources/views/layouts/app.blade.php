@@ -36,9 +36,14 @@
                 <a href="#contacto" class="rounded-full px-3 py-2 text-sm font-medium text-white/80 transition hover:bg-white/10 hover:text-gold">Contacto</a>
             </nav>
 
-            <a href="#contacto" class="hidden items-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-navy shadow-sm transition hover:bg-white hover:shadow-md xl:inline-flex">
-                Agendar consulta
-            </a>
+            <div class="hidden items-center gap-2 xl:flex">
+                <a href="{{ route('filament.panel.auth.login') }}" class="inline-flex items-center rounded-full border border-white/40 px-5 py-3 text-sm font-semibold text-white transition hover:border-gold hover:bg-white/10 hover:text-gold">
+                    Iniciar sesión
+                </a>
+                <a href="#contacto" class="inline-flex items-center rounded-full bg-gold px-5 py-3 text-sm font-semibold text-navy shadow-sm transition hover:bg-white hover:shadow-md">
+                    Agendar consulta
+                </a>
+            </div>
 
             <details class="relative xl:hidden">
                 <summary aria-label="Abrir menú de navegación"
@@ -53,6 +58,7 @@
                     <a href="#nosotros" class="rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:text-navy">Nosotros</a>
                     <a href="#equipo" class="rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:text-navy">Equipo</a>
                     <a href="#preguntas" class="rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 hover:text-navy">Preguntas frecuentes</a>
+                    <a href="{{ route('filament.panel.auth.login') }}" class="rounded-xl border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-navy transition hover:bg-slate-50">Iniciar sesión</a>
                     <a href="#contacto" class="rounded-xl bg-navy px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-gold">Agendar consulta</a>
                 </nav>
             </details>

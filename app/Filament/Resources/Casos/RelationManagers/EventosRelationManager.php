@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Casos\RelationManagers;
 
+use App\Support\TableExcelExport;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -63,6 +64,7 @@ class EventosRelationManager extends RelationManager
                 ]),
             ])
             ->headerActions([
+                TableExcelExport::action(),
                 CreateAction::make()->authorize(fn (): bool => auth()->user()->can('Update:Caso')),
             ])
             ->recordActions([

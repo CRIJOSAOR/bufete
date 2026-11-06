@@ -181,6 +181,25 @@ class PanelPanelProvider extends PanelProvider
                     }
 
                     @media (max-width: 1023px) {
+                        .fi-body {
+                            --sidebar-width: min(18rem, calc(100vw - 3.5rem));
+                        }
+
+                        .fi-body-has-topbar .fi-sidebar-header {
+                            min-height: 6rem;
+                            padding: .75rem 1rem;
+                        }
+
+                        .fi-body-has-topbar .fi-sidebar-header .fi-logo {
+                            height: 4.25rem !important;
+                            max-width: 9rem;
+                            padding: .3rem .65rem;
+                            border-radius: .75rem;
+                            background-color: #F7F5EF;
+                            box-shadow: 0 2px 8px rgba(0, 0, 0, .14);
+                            object-fit: contain;
+                        }
+
                         .fi-topbar-brand {
                             display: none;
                         }
@@ -745,11 +764,33 @@ class PanelPanelProvider extends PanelProvider
                         color: #F0F2EC;
                     }
 
-                    @media (max-width: 900px) {
+                    @media (max-width: 900px), (max-height: 440px) {
+                            html:has(.fi-login-visual-panel),
+                            body:has(.fi-login-visual-panel) {
+                                height: auto;
+                                min-height: 100%;
+                                overflow-x: hidden !important;
+                                overflow-y: auto !important;
+                            }
+
+                            .fi-body:has(.fi-login-visual-panel) {
+                                position: relative;
+                                inset: auto;
+                                height: auto;
+                                min-height: 100vh;
+                                min-height: 100dvh;
+                                overflow-x: hidden !important;
+                                overflow-y: auto !important;
+                            }
+
                             .fi-body:has(.fi-login-visual-panel) .fi-simple-layout {
                                 grid-template-columns: minmax(0, 1fr);
-                                grid-template-rows: minmax(10rem, 26dvh) minmax(0, 1fr);
+                                grid-template-rows: minmax(10rem, 26dvh) auto;
+                                height: auto;
+                                min-height: 100vh;
+                                min-height: 100dvh;
                                 align-content: stretch;
+                                overflow: visible;
                             }
 
                             .fi-login-visual-panel {
@@ -806,7 +847,7 @@ class PanelPanelProvider extends PanelProvider
                         .fi-body:has(.fi-login-visual-panel) .fi-simple-main-ctn {
                             grid-column: 1;
                             grid-row: 2;
-                            height: 100%;
+                            height: auto;
                             min-height: 0;
                             padding: clamp(1.25rem, 5vw, 2.5rem);
                         }
@@ -897,7 +938,7 @@ class PanelPanelProvider extends PanelProvider
 
                     @media (max-width: 900px) and (max-height: 760px) {
                         .fi-body:has(.fi-login-visual-panel) .fi-simple-layout {
-                            grid-template-rows: minmax(7rem, 23dvh) minmax(0, 1fr);
+                            grid-template-rows: minmax(7rem, 23dvh) auto;
                         }
 
                         .fi-login-visual-panel-content {

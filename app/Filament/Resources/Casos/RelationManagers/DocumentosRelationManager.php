@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Casos\RelationManagers;
 
 use App\Models\CasoDocumento;
+use App\Support\TableExcelExport;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
@@ -94,6 +95,7 @@ class DocumentosRelationManager extends RelationManager
                 ]),
             ])
             ->headerActions([
+                TableExcelExport::action(),
                 CreateAction::make()
                     ->authorize(fn (): bool => auth()->user()->can('Update:Caso'))
                     ->mutateFormDataUsing(function (array $data): array {

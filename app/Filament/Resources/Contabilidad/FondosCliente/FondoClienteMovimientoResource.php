@@ -10,6 +10,8 @@ use App\Models\FondoClienteMovimiento;
 use App\Models\Honorario;
 use App\Support\ContabilidadFormOptions;
 use App\Support\ContabilidadPdf;
+use App\Support\TableExcelExport;
+use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -24,7 +26,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use BackedEnum;
 use UnitEnum;
 
 class FondoClienteMovimientoResource extends BaseResource
@@ -115,6 +116,7 @@ class FondoClienteMovimientoResource extends BaseResource
         return $table
             ->modifyQueryUsing(fn (Builder $query) => $query->with(['cliente', 'caso']))
             ->defaultSort('fecha', 'desc')
+            ->headerActions([TableExcelExport::action()])
             ->columns([
                 TextColumn::make('fecha')->label('Fecha')->dateTime('d/m/Y H:i')->sortable(),
                 TextColumn::make('cliente.nombre')->label('Cliente')->searchable(),

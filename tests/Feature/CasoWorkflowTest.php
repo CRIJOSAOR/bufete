@@ -2,16 +2,20 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Resources\Casos\Pages\ListCasos;
 use App\Models\Caso;
 use App\Models\CasoDocumento;
+use App\Models\Cliente;
 use App\Models\RoleDataScope;
 use App\Models\User;
 use App\Support\CasoPdfImageEmbedder;
 use App\Support\RecordAccessScope;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Actions\Testing\TestAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Livewire;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -20,12 +24,39 @@ class CasoWorkflowTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_case_table_can_download_filtered_rows_as_excel(): void
+    {
+        $this->createCase('EXP-EXCEL-INCLUIDO');
+        $this->createCase('EXP-EXCEL-EXCLUIDO');
+        $role = Role::create(['name' => 'excel-case-reader', 'guard_name' => 'web']);
+
+        foreach (['ViewAny:Caso', 'View:Caso'] as $permissionName) {
+            $role->givePermissionTo(Permission::create([
+                'name' => $permissionName,
+                'guard_name' => 'web',
+            ]));
+        }
+
+        RoleDataScope::create([
+            'role_id' => $role->getKey(),
+            'model_type' => Caso::class,
+            'scope' => RecordAccessScope::ALL,
+        ]);
+
+        $this->actingAs(User::factory()->create()->assignRole($role));
+
+        Livewire::test(ListCasos::class)
+            ->searchTable('EXP-EXCEL-INCLUIDO')
+            ->callAction(TestAction::make('downloadExcel')->table())
+            ->assertFileDownloaded(contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    }
+
     public function test_case_can_track_tasks_hearings_timeline_and_documents(): void
     {
         $case = Caso::create([
             'numero' => 'EXP-WORKFLOW',
             'titulo' => 'Expediente de prueba',
-            'cliente_id' => \App\Models\Cliente::create([
+            'cliente_id' => Cliente::create([
                 'tipo' => 'natural',
                 'nombre' => 'Cliente de prueba',
             ])->id,
@@ -66,7 +97,7 @@ class CasoWorkflowTest extends TestCase
         $case = Caso::create([
             'numero' => 'EXP-TASK',
             'titulo' => 'Tarea',
-            'cliente_id' => \App\Models\Cliente::create([
+            'cliente_id' => Cliente::create([
                 'tipo' => 'natural',
                 'nombre' => 'Cliente',
             ])->id,
@@ -270,7 +301,7 @@ class CasoWorkflowTest extends TestCase
         return Caso::create([
             'numero' => $number,
             'titulo' => 'Caso para prueba',
-            'cliente_id' => \App\Models\Cliente::create([
+            'cliente_id' => Cliente::create([
                 'tipo' => 'natural',
                 'nombre' => 'Cliente '.$number,
             ])->id,

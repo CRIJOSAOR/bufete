@@ -2,6 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Resources\Contabilidad\Gastos\Pages\ListGastos;
+use App\Filament\Resources\Contabilidad\Honorarios\HonorarioResource;
+use App\Filament\Resources\Contabilidad\Pagos\PagoResource;
+use App\Filament\Resources\Roles\RoleResource;
+use App\Filament\Widgets\ContabilidadResumenWidget;
 use App\Models\Caso;
 use App\Models\Cliente;
 use App\Models\FondoClienteMovimiento;
@@ -12,11 +17,10 @@ use App\Models\RoleDataScope;
 use App\Models\User;
 use App\Support\AccountingLedger;
 use App\Support\AccountingMoney;
-use App\Support\RecordAccessScope;
 use App\Support\ContabilidadPdf;
-use App\Filament\Widgets\ContabilidadResumenWidget;
-use App\Filament\Resources\Roles\RoleResource;
+use App\Support\RecordAccessScope;
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
+use Filament\Actions\Testing\TestAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
@@ -28,6 +32,33 @@ use Tests\TestCase;
 class AccountingModuleTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function test_expense_table_can_download_filtered_rows_as_excel(): void
+    {
+        $client = $this->createClient();
+        Gasto::create([
+            'cliente_id' => $client->getKey(),
+            'concepto' => 'Gasto Excel incluido',
+            'categoria' => 'copias',
+            'monto' => '12.00',
+            'moneda' => 'HNL',
+            'fecha' => now()->toDateString(),
+        ]);
+        Gasto::create([
+            'cliente_id' => $client->getKey(),
+            'concepto' => 'Gasto Excel excluido',
+            'categoria' => 'copias',
+            'monto' => '8.00',
+            'moneda' => 'HNL',
+            'fecha' => now()->toDateString(),
+        ]);
+        $this->actingAs($this->userWithAccountingPermissions(['View:Gasto', 'ViewAny:Gasto']));
+
+        Livewire::test(ListGastos::class)
+            ->searchTable('Excel incluido')
+            ->callAction(TestAction::make('downloadExcel')->table())
+            ->assertFileDownloaded(contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    }
 
     public function test_partial_payments_update_the_honorarium_balance_without_exceeding_the_agreement(): void
     {
@@ -224,7 +255,7 @@ class AccountingModuleTest extends TestCase
     public function test_accounting_resources_appear_in_role_permissions(): void
     {
         $honorarioResource = collect(FilamentShield::getResources())
-            ->firstWhere('resourceFqcn', \App\Filament\Resources\Contabilidad\Honorarios\HonorarioResource::class);
+            ->firstWhere('resourceFqcn', HonorarioResource::class);
         $options = RoleResource::getResourcePermissionOptions($honorarioResource);
 
         $this->assertArrayHasKey('ViewAny:Honorario', $options);
@@ -232,7 +263,7 @@ class AccountingModuleTest extends TestCase
         $this->assertArrayHasKey('consultar_reportes_contables', FilamentShield::getCustomPermissions());
 
         $paymentResource = collect(FilamentShield::getResources())
-            ->firstWhere('resourceFqcn', \App\Filament\Resources\Contabilidad\Pagos\PagoResource::class);
+            ->firstWhere('resourceFqcn', PagoResource::class);
         $paymentOptions = RoleResource::getResourcePermissionOptions($paymentResource);
 
         $this->assertArrayHasKey('Create:Pago', $paymentOptions);

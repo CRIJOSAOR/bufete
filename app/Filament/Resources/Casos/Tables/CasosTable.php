@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Casos\Tables;
 
 use App\Models\Caso;
+use App\Support\TableExcelExport;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -19,6 +20,7 @@ class CasosTable
     {
         return $table
             ->defaultSort('created_at', 'desc')
+            ->headerActions([TableExcelExport::action()])
             ->columns([
                 TextColumn::make('numero')
                     ->label('Expediente')
@@ -44,10 +46,10 @@ class CasosTable
                     ->badge()
                     ->formatStateUsing(fn ($state) => Caso::ESTADOS[$state] ?? $state)
                     ->color(fn ($state) => match ($state) {
-                        'abierto'    => 'success',
+                        'abierto' => 'success',
                         'en_tramite' => 'info',
-                        'en_espera'  => 'warning',
-                        default      => 'gray',
+                        'en_espera' => 'warning',
+                        default => 'gray',
                     }),
 
                 TextColumn::make('abogados.name')

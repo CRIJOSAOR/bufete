@@ -9,6 +9,8 @@ use App\Models\Honorario;
 use App\Models\Pago;
 use App\Support\ContabilidadFormOptions;
 use App\Support\ContabilidadPdf;
+use App\Support\TableExcelExport;
+use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -22,7 +24,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use BackedEnum;
 use UnitEnum;
 
 class PagoResource extends BaseResource
@@ -100,6 +101,7 @@ class PagoResource extends BaseResource
         return $table
             ->modifyQueryUsing(fn (Builder $query) => $query->with(['honorario.cliente', 'honorario.caso']))
             ->defaultSort('fecha_pago', 'desc')
+            ->headerActions([TableExcelExport::action()])
             ->columns([
                 TextColumn::make('fecha_pago')->label('Fecha')->dateTime('d/m/Y H:i')->sortable(),
                 TextColumn::make('honorario.cliente.nombre')->label('Cliente')->searchable(),

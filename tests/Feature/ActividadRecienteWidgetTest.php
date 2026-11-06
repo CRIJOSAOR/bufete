@@ -9,6 +9,7 @@ use App\Models\Honorario;
 use App\Models\Pago;
 use App\Support\AccountingLedger;
 use App\Support\RecordAccessScope;
+use Filament\Actions\Testing\TestAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\Feature\Concerns\CreatesDashboardFixtures;
@@ -61,7 +62,9 @@ class ActividadRecienteWidgetTest extends TestCase
             ->assertSee($user->name)
             ->assertDontSee('EXP-OCULTO')
             ->assertDontSee('NO-DEBE-REGISTRARSE')
-            ->assertDontSee('REFERENCIA-PRIVADA');
+            ->assertDontSee('REFERENCIA-PRIVADA')
+            ->callAction(TestAction::make('downloadExcel')->table())
+            ->assertFileDownloaded(contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     }
 
     public function test_activity_is_hidden_when_the_user_has_no_record_view_permission(): void
